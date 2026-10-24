@@ -1,90 +1,126 @@
-# BT4012 Kaggle Bitcoin competition
+# BT4012 Kaggle Bitcoin competition: final model
 
-Predicting illicit Bitcoin transactions (ROC-AUC). Training data covers time steps 1–35 and the test set steps 36–49, so every model is validated **forward in time** on three checks:
+Predicts illicit Bitcoin transactions (metric: ROC-AUC). The final submissions are rank blends of graph-stacking models.
 
-| Check | Fit on | Score on |
-|---|---|---|
-| `steps_22_28` | labelled steps 1–21 | steps 22–28 |
-| `steps_29_35` | labelled steps 1–28 | steps 29–35 |
-| `14_step_check` | the steps 1–21 model | steps 22–35 |
+## Contents
 
-Settings are selected on the mean ROC-AUC of the two 7-step checks; the 14-step check is reported only.
-
-## Repository layout
-
-```
-e1234567.ipynb                         final submission model, end to end
-experiments/baselines_hgb_lightgbm.ipynb   baselines on the 165 supplied features: HGB, LightGBM, time-weighted HGB
-submission/                            the two final submission files (written by e1234567.ipynb)
-requirements.txt                       pinned dependencies
-```
-
-`e1234567.ipynb` covers data checks and preprocessing, the validation checks, graph feature engineering and two-round graph stacking (D2 LightGBM and D2 HGB), the stacked MLP, validation of every component and blend ratio, and the final submissions:
-
-| File | LGBM : HGB : MLP rank blend |
+| Path | What it is |
 |---|---|
-| `submission/graph_blend_lgbm_hgb_mlp_311.csv` | 3:1:1 (top submission) |
-| `submission/graph_blend_lgbm_hgb_mlp_111.csv` | 1:1:1 |
+| `e1297793.ipynb` | Final model, end to end: data checks, graph features, stacking, stacked MLP, blends, submission files |
+| `experiments/baselines_hgb_lightgbm.ipynb` | Baselines on the raw 165 features (HistGradientBoosting, LightGBM, time weighting) |
+| `submission/` | The two final submission files |
+| `requirements.txt` | Python packages with pinned versions |
 
-Running the notebook also creates `stacked_mlp.py` (written by the notebook) and `work/` (intermediate stage-2 features and MLP predictions, about 60 MB); both are regenerated on every run.
+## Reproduce the results
 
-## Reproduce
-
-### 1. Environment
-Python **3.13.1**. Create a virtual environment and install the pinned packages:
+### Step 1: Install Python
+Use **Python 3.13.1**. Check your version:
 
 ```bash
-python3.13 -m venv .venv
+python3 --version
 ```
 
+### Step 2: Download this repository
 ```bash
-.venv/bin/pip install -r requirements.txt
-```
-
-**Apple Silicon (macOS 14 or later):** pip installs a NumPy build that uses Apple Accelerate. The results were produced with the OpenBLAS build of the same version; replace it to reproduce every score exactly:
-
-```bash
-.venv/bin/pip download numpy==2.3.2 --platform macosx_11_0_arm64 --only-binary=:all: --no-deps -d wheels
+git clone https://github.com/YOUR-USERNAME/REPO-NAME.git
 ```
 
 ```bash
-.venv/bin/pip install --force-reinstall --no-deps wheels/numpy-2.3.2-cp313-cp313-macosx_11_0_arm64.whl
+cd REPO-NAME
 ```
 
-Register the environment as the Jupyter kernel the notebooks expect (`bt4012`):
+### Step 3: Add the competition data
+The data is not in this repository. Download it from the Kaggle competition page, then:
+
+1. Create a folder named `bt-4012-competition-2026` inside `REPO-NAME`.
+2. Put these four files inside it: `train.csv`, `test.csv`, `txs_edgelist.csv`, `sample_submission.csv`.
+
+The folder should look like this:
+
+```
+REPO-NAME/
+├── bt-4012-competition-2026/
+│   ├── train.csv
+│   ├── test.csv
+│   ├── txs_edgelist.csv
+│   └── sample_submission.csv
+├── e1297793.ipynb
+├── experiments/
+└── ...
+```
+
+### Step 4: Create an environment and install the packages
+Create a virtual environment inside the project:
 
 ```bash
-.venv/bin/python -m ipykernel install --user --name bt4012 --display-name "Python (BT4012)"
+python3 -m venv .venv
 ```
 
-### 2. Data
-Download the competition files and place them in `bt-4012-competition-2026/` at the repository root:
+Activate it:
+- macOS or Linux: `source .venv/bin/activate`
+- Windows (PowerShell): `.venv\Scripts\Activate.ps1`
 
-```
-bt-4012-competition-2026/train.csv
-bt-4012-competition-2026/test.csv
-bt-4012-competition-2026/txs_edgelist.csv
-bt-4012-competition-2026/sample_submission.csv
-```
-
-The data folder is not tracked in git.
-
-### 3. Run
-Open `e1234567.ipynb` with the `Python (BT4012)` kernel and run all cells, or run it headless from the repository root:
+Install the pinned packages:
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=7200 e1234567.ipynb
+pip install -r requirements.txt
 ```
 
-| Notebook | Approximate run time (8-core Apple Silicon CPU) |
-|---|---|
-| `e1234567.ipynb` | about 15 minutes |
-| `experiments/baselines_hgb_lightgbm.ipynb` | about 2 minutes |
+Register the notebook kernel. The notebooks are set to use a kernel called `bt4012`:
 
-Everything runs on CPU; no GPU is needed.
+```bash
+python -m ipykernel install --user --name bt4012 --display-name "Python (BT4012)"
+```
 
-### Reproducibility notes
-- **Seeds** are fixed throughout; re-running gives identical submission files with the pinned versions.
-- **scikit-learn must be 1.7.1.** Other versions build different HistGradientBoosting trees.
-- **LightGBM and PyTorch in one process** can deadlock on macOS (both bundle OpenMP), so `e1234567.ipynb` runs the PyTorch MLP step in a separate Python process (`stacked_mlp.py`).
-- The MLP uses 8 PyTorch threads; a different thread count changes its results slightly.
+### Step 5: Run the final model
+**Option A: Jupyter (recommended for viewing each step).** Start Jupyter:
+
+```bash
+jupyter lab
+```
+
+Open `e1297793.ipynb`, choose the kernel **Python (BT4012)**, then select **Run → Run All Cells**.
+
+**Option B: command line.** From the project folder:
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 e1297793.ipynb
+```
+
+The run takes roughly 10–15 minutes on an 8-core laptop CPU. The MLP step starts its own Python process automatically, so you don't need to do anything extra for it.
+
+The notebook writes two files to `submission/`:
+- `graph_blend_lgbm_hgb_mlp_311.csv` (top submission)
+- `graph_blend_lgbm_hgb_mlp_111.csv` (second final pick)
+
+### Step 6 (optional): Run the baselines
+```bash
+cd experiments
+```
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 baselines_hgb_lightgbm.ipynb
+```
+
+```bash
+cd ..
+```
+
+### Step 7: Check your results
+The notebook prints a table of blend ratios. These are the values to expect (ROC-AUC):
+
+| Model | Steps 22–28 | Steps 29–35 | 14-step check (22–35) |
+|---|---|---|---|
+| Stacked MLP alone | 0.97359 | 0.99513 | 0.94743 |
+| Blend 3:1:1 | 0.94777 | 0.99881 | 0.88502 |
+| Blend 1:1:1 | 0.95606 | 0.99860 | 0.90151 |
+
+
+
+
+
+## Notes
+- **Seeds are fixed** in every notebook, so re-running on the same machine gives the same numbers.
+- **The MLP uses 8 CPU threads.** A machine with a different core count can give slightly different MLP results.
+- **Run times are approximate** and depend on your machine.
+- **Only the final model is in this repository.** The earlier experiments are not included.
