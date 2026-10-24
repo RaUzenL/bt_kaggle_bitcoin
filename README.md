@@ -1,6 +1,10 @@
 # BT4012 Kaggle Bitcoin competition: final model
 
-Predicts illicit Bitcoin transactions (metric: ROC-AUC). The final submissions are rank blends of graph-stacking models.
+Predicts the probability of illicit Bitcoin transactions (using the ROC-AUC score). The final submissions are rank blends of graph-stacking models.
+
+Competition: https://www.kaggle.com/competitions/bt-4012-competition-2026/overview
+
+Please import the competition data folder under the root of this repo (see Step 3).
 
 ## Contents
 
