@@ -128,3 +128,7 @@ The notebook prints a table of blend ratios. These are the values to expect (ROC
 - **The MLP uses 8 CPU threads.** A machine with a different core count can give slightly different MLP results.
 - **Run times are approximate** and depend on your machine.
 - **Only the final model is in this repository.** The earlier experiments are not included.
+
+## AI Declaration
+
+Claude helped to improve the readability of the code, draft this README, and summarise the public leaderboard scores of the submissions for me to decide. I made the final decisions on the models, validation design, blend ratios and submissions without the help of Claude.
