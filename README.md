@@ -29,7 +29,7 @@ The main notebook `e1297793.ipynb` covers data checks and preprocessing, the val
 
 | File | LGBM : HGB : MLP rank blend |
 |---|---|
-| `submission/graph_blend_lgbm_hgb_mlp_311.csv` | 3:1:1 (top submission) |
+| `submission/graph_blend_lgbm_hgb_mlp_311.csv` | 3:1:1 |
 | `submission/graph_blend_lgbm_hgb_mlp_111.csv` | 1:1:1 |
 
 Running the notebook also creates `stacked_mlp.py` (written by the notebook) and `work/` (intermediate stage-2 features and MLP predictions); both are regenerated on every run.
