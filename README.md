@@ -1,6 +1,12 @@
 # BT4012 Kaggle Bitcoin competition
 
-Predicting illicit Bitcoin transactions (ROC-AUC). Training data covers time steps 1–35 and the test set steps 36–49, so every model is validated **forward in time** on three checks:
+Predicting the probability of illicit Bitcoin transactions (using the ROC-AUC score). 
+
+Link to the competition: https://www.kaggle.com/competitions/bt-4012-competition-2026/overview
+
+Please import the competition data folder under the root of this repo.
+
+Training data covers time steps 1–35 and the test set steps 36–49, so every model is validated **forward in time** on three checks:
 
 | Check | Fit on | Score on |
 |---|---|---|
@@ -13,22 +19,22 @@ Settings are selected on the mean ROC-AUC of the two 7-step checks; the 14-step 
 ## Repository layout
 
 ```
-e1234567.ipynb                         final submission model, end to end
+e1297793.ipynb                         final submission model, end to end
 experiments/baselines_hgb_lightgbm.ipynb   baselines on the 165 supplied features: HGB, LightGBM, time-weighted HGB
-submission/                            the two final submission files (written by e1234567.ipynb)
+submission/                            the two final submission files I chose on kaggle (written by e1297793.ipynb)
 requirements.txt                       pinned dependencies
 ```
 
-`e1234567.ipynb` covers data checks and preprocessing, the validation checks, graph feature engineering and two-round graph stacking (D2 LightGBM and D2 HGB), the stacked MLP, validation of every component and blend ratio, and the final submissions:
+The main notebook `e1297793.ipynb` covers data checks and preprocessing, the validation checks, graph feature engineering and two-round graph stacking (D2 LightGBM and D2 HGB), the stacked MLP, validation of every component and blend ratio, and the final submissions:
 
 | File | LGBM : HGB : MLP rank blend |
 |---|---|
 | `submission/graph_blend_lgbm_hgb_mlp_311.csv` | 3:1:1 (top submission) |
 | `submission/graph_blend_lgbm_hgb_mlp_111.csv` | 1:1:1 |
 
-Running the notebook also creates `stacked_mlp.py` (written by the notebook) and `work/` (intermediate stage-2 features and MLP predictions, about 60 MB); both are regenerated on every run.
+Running the notebook also creates `stacked_mlp.py` (written by the notebook) and `work/` (intermediate stage-2 features and MLP predictions); both are regenerated on every run.
 
-## Reproduce
+## How to reproduce?
 
 ### 1. Environment
 Python **3.13.1**. Create a virtual environment and install the pinned packages:
@@ -70,15 +76,15 @@ bt-4012-competition-2026/sample_submission.csv
 The data folder is not tracked in git.
 
 ### 3. Run
-Open `e1234567.ipynb` with the `Python (BT4012)` kernel and run all cells, or run it headless from the repository root:
+Open `e1297793.ipynb` with the `Python (BT4012)` kernel and run all cells, or run it headless from the repository root:
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=7200 e1234567.ipynb
+jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=7200 e1297793.ipynb
 ```
 
-| Notebook | Approximate run time (8-core Apple Silicon CPU) |
+| Notebook | Approximate run time |
 |---|---|
-| `e1234567.ipynb` | about 15 minutes |
+| `e1297793.ipynb` | about 15 minutes |
 | `experiments/baselines_hgb_lightgbm.ipynb` | about 2 minutes |
 
 Everything runs on CPU; no GPU is needed.
@@ -86,5 +92,5 @@ Everything runs on CPU; no GPU is needed.
 ### Reproducibility notes
 - **Seeds** are fixed throughout; re-running gives identical submission files with the pinned versions.
 - **scikit-learn must be 1.7.1.** Other versions build different HistGradientBoosting trees.
-- **LightGBM and PyTorch in one process** can deadlock on macOS (both bundle OpenMP), so `e1234567.ipynb` runs the PyTorch MLP step in a separate Python process (`stacked_mlp.py`).
+- **LightGBM and PyTorch in one process** can deadlock on macOS (both bundle OpenMP), so `e1297793.ipynb` runs the PyTorch MLP step in a separate Python process (`stacked_mlp.py`).
 - The MLP uses 8 PyTorch threads; a different thread count changes its results slightly.
