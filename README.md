@@ -26,23 +26,23 @@ python3 --version
 
 ### Step 2: Download this repository
 ```bash
-git clone https://github.com/YOUR-USERNAME/REPO-NAME.git
+git clone https://github.com/RaUzenL/bt_kaggle_bitcoin.git
 ```
 
 ```bash
-cd REPO-NAME
+cd bt_kaggle_bitcoin
 ```
 
 ### Step 3: Add the competition data
 The data is not in this repository. Download it from the Kaggle competition page, then:
 
-1. Create a folder named `bt-4012-competition-2026` inside `REPO-NAME`.
+1. Create a folder named `bt-4012-competition-2026` inside `bt_kaggle_bitcoin`.
 2. Put these four files inside it: `train.csv`, `test.csv`, `txs_edgelist.csv`, `sample_submission.csv`.
 
 The folder should look like this:
 
 ```
-REPO-NAME/
+bt_kaggle_bitcoin/
 ├── bt-4012-competition-2026/
 │   ├── train.csv
 │   ├── test.csv
