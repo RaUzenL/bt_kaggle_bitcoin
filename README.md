@@ -17,12 +17,20 @@ Please import the competition data folder under the root of this repo (see Step 
 
 ## Reproduce the results
 
-### Step 1: Install Python
-Use **Python 3.13.1**. Check your version:
+### Step 1: Install Python 3.13 (required)
+This project needs **Python 3.13** (3.13.1 was used to produce the results). **Python 3.14 and other versions will not work**, because `scikit-learn==1.7.1` has no build for them and the installation will fail.
+
+Install Python 3.13 before going further. On macOS you can run `brew install python@3.13`, or download it from python.org.
+
+Check that it is available:
 
 ```bash
-python3 --version
+python3.13 --version
 ```
+
+If this command is not found, install Python 3.13 first. Do not continue with another version.
+
+On Windows, use `py -3.13 --version` and `py -3.13 -m venv .venv` in place of the `python3.13` commands.
 
 ### Step 2: Download this repository
 ```bash
@@ -54,15 +62,23 @@ bt_kaggle_bitcoin/
 ```
 
 ### Step 4: Create an environment and install the packages
-Create a virtual environment inside the project:
+Create a virtual environment inside the project, using Python 3.13:
 
 ```bash
-python3 -m venv .venv
+python3.13 -m venv .venv
 ```
+
+On Windows, use `py -3.13 -m venv .venv` instead.
 
 Activate it:
 - macOS or Linux: `source .venv/bin/activate`
 - Windows (PowerShell): `.venv\Scripts\Activate.ps1`
+
+Check that the environment uses Python 3.13. The output must start with `Python 3.13`. If it shows another version, delete `.venv` and create it again with `python3.13`:
+
+```bash
+python --version
+```
 
 Install the pinned packages:
 
